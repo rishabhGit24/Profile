@@ -1,0 +1,41 @@
+# Deploy the static site to GitHub Pages.
+#
+# This repo's Pages site is configured with build_type "workflow", which means
+# GitHub does not build anything on push by itself — it waits for a workflow to
+# publish an artifact. Without this file, commits land on master and the live
+# site silently keeps serving the last successful build.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish; queue at most one more.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      # Plain static files — the repo root is the site.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
