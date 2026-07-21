@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0705">
+<meta name="color-scheme" content="dark">
 <title>Rishabh Bharadwaj R — Bespoke Software</title>
-<meta name="description" content="Full-stack engineer in Bangalore. A bespoke atelier of the work, cut and fitted.">
+<meta name="description" content="Rishabh Bharadwaj R — Information Science engineer in Bangalore. A bespoke atelier of the work, cut and fitted.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -20,7 +22,8 @@
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:#0a0705;color:var(--cream);
     font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-  body{overflow-x:hidden}
+  body{overflow-x:hidden;overscroll-behavior-y:none;
+    -webkit-text-size-adjust:100%;text-size-adjust:100%}
 
   #stage{position:fixed;inset:0;z-index:0}
   #stage canvas{display:block;width:100%;height:100%}
@@ -31,6 +34,9 @@
 
   #scroller{position:relative;z-index:2}
   .step{height:100vh}
+  @supports (height:100dvh){ .step{height:100dvh} }
+  /* vertical swipes scroll the page; horizontal ones are ours to look around */
+  #scroller{touch-action:pan-y}
 
   /* ---------- fixed chrome ---------- */
   .wordmark{position:fixed;top:26px;left:34px;z-index:5;pointer-events:none;
@@ -58,14 +64,26 @@
     align-items:center;justify-content:center;text-align:center;pointer-events:none;padding:24px;
     background:radial-gradient(ellipse 62% 48% at 50% 47%,
       rgba(8,5,3,.80) 0%, rgba(8,5,3,.58) 48%, rgba(8,5,3,.12) 78%, rgba(8,5,3,0) 100%)}
-  #overture .rule{width:44px;height:1px;background:var(--brass);opacity:.8;margin:0 auto 26px}
-  #overture .est{font-size:9.5px;letter-spacing:.42em;color:var(--brass-soft);margin-bottom:26px}
+  #overture .rule{width:54px;height:1px;background:var(--brass);opacity:.8;margin:0 auto 30px}
+  #overture .est{font-size:11.5px;letter-spacing:.42em;color:var(--brass-soft);margin-bottom:30px}
   #overture h1{font-family:'Playfair Display',serif;font-weight:600;margin:0;
-    font-size:clamp(38px,7.4vw,86px);line-height:1.02;letter-spacing:.005em}
+    font-size:clamp(46px,8.6vw,104px);line-height:1.02;letter-spacing:.005em}
   #overture h1 em{font-style:italic;color:var(--brass-soft)}
-  #overture .role{margin-top:24px;font-size:11px;letter-spacing:.34em;color:var(--muted)}
-  #overture .tag{margin-top:32px;max-width:29em;font-size:14.5px;line-height:1.85;
-    color:rgba(242,233,216,.72);font-weight:300}
+  #overture .role{margin-top:28px;font-size:13.5px;letter-spacing:.34em;color:var(--muted)}
+  #overture .tag{margin-top:36px;max-width:27em;font-size:17.5px;line-height:1.8;
+    color:rgba(242,233,216,.74);font-weight:300}
+  /* the recut is the point of the whole page — let it carry weight */
+  #overture .tag i{font-style:italic;color:rgba(242,233,216,.9)}
+  #overture .tag b{font-weight:500;color:var(--cream)}
+  /* the display type is sized off viewport WIDTH, so a wide-but-short window
+     is the one case where the overture can outgrow the screen */
+  @media (max-height:640px){
+    #overture h1{font-size:clamp(34px,6.2vw,62px)}
+    #overture .est{margin-bottom:18px}
+    #overture .role{margin-top:18px;font-size:12px}
+    #overture .tag{margin-top:22px;font-size:15px;line-height:1.7}
+    #overture .rule{margin-bottom:20px}
+  }
 
   /* ---------- station panels ---------- */
   .panel{position:fixed;z-index:3;width:min(494px,90vw);
@@ -122,12 +140,55 @@
     color:var(--muted);line-height:1.9}
 
   @media(max-width:820px){
-    .panel{width:90vw;left:5vw;right:auto;top:auto;bottom:4vh;max-height:62vh;
-      padding:24px 22px 22px;transform:translateY(16px)}
+    /* Panels sit over the lower third so the display item stays visible above
+       them, and are sized for a thumb-held screen rather than scaled down
+       desktop type. backdrop-filter is dropped — on phones it costs a full
+       compositing pass over the live canvas every frame. */
+    .panel{width:auto;left:14px;right:14px;top:auto;bottom:14px;
+      max-height:54svh;padding:20px 18px 18px;
+      transform:translateY(14px);backdrop-filter:none;
+      background:rgba(14,10,6,.94)}
     .panel.on{transform:translateY(0)}
-    .panel.right{left:5vw;right:auto}
-    .bolts{grid-template-columns:1fr}
+    .panel.left,.panel.right{left:14px;right:14px}
+    .panel .kicker{font-size:9.5px;letter-spacing:.28em;margin-bottom:11px}
+    .panel h2{font-size:clamp(21px,5.8vw,27px);margin:0 0 11px}
+    .panel p{font-size:14.5px;line-height:1.7;margin:0 0 11px}
+    .panel .meta{margin-top:15px;padding-top:12px;font-size:9.5px;line-height:1.85}
+    .swatches{gap:5px;margin-top:12px}
+    .swatches span{font-size:9.5px;padding:4px 9px}
+    .bolts{grid-template-columns:1fr;gap:11px}
+    .bolts div{font-size:13px}
+    .works article{padding:9px 0}
+    .works h3{font-size:15.5px}
+    .works p{font-size:13px;line-height:1.6}
+    .ledger a{font-size:14px;padding:9px 0}
+    .ledger a span{font-size:9.5px}
     .progress{display:none}
+    .wordmark{top:16px;left:18px}
+    .wordmark .name{font-size:13px}
+    .wordmark .sub{font-size:8px}
+    .hint{bottom:16px;font-size:8.5px}
+    /* the overture is the one full-bleed moment — keep it generous but contained */
+    #overture{padding:20px}
+    #overture h1{font-size:clamp(38px,11vw,60px)}
+    #overture .est{font-size:9.5px;letter-spacing:.3em;margin-bottom:22px}
+    #overture .role{font-size:11px;letter-spacing:.26em;margin-top:20px}
+    #overture .tag{font-size:15px;margin-top:24px;max-width:24em;line-height:1.72}
+  }
+  @media(max-width:900px) and (orientation:landscape){
+    .panel{left:12px;right:auto;top:50%;bottom:auto;width:min(46vw,400px);
+      max-height:88svh;transform:translateY(calc(-50% + 12px));padding:16px 16px 14px}
+    .panel.on{transform:translateY(-50%)}
+    .panel.left,.panel.right{left:12px;right:auto}
+    .panel h2{font-size:clamp(18px,3.2vw,23px);margin:0 0 9px}
+    .panel p{font-size:13px;line-height:1.62;margin:0 0 9px}
+    .panel .kicker{margin-bottom:9px}
+    .panel .meta{margin-top:11px;padding-top:9px}
+    #overture .tag{max-width:30em}
+  }
+  /* coarse pointers get no hover-dependent affordances */
+  @media(hover:none){
+    .ledger a:active{color:var(--brass)}
   }
   @media(prefers-reduced-motion:reduce){
     .panel{transition:opacity .3s ease}
@@ -152,10 +213,10 @@
   <div class="rule"></div>
   <div class="est">EST. 2021 &middot; BENGALURU, INDIA</div>
   <h1>Rishabh<br>Bharadwaj <em>R.</em></h1>
-  <div class="role">FULL&nbsp;STACK&nbsp;ENGINEER</div>
-  <p class="tag">I don't patch garments. I recut them &mdash; which is how a student
-    of electrical engineering ended up building production software, cloud
-    infrastructure and a generative&nbsp;AI product.</p>
+  <div class="role">INFORMATION&nbsp;SCIENCE&nbsp;ENGINEER</div>
+  <p class="tag">I enrolled in <i>Electrical &amp; Electronics</i>. In my first year I
+    found code &mdash; and I didn't patch the pattern, I <b>recut it, into Information
+    Science</b>. Every garment in this shop was cut after that decision.</p>
 </div>
 
 <!-- ============ PANELS ============ -->
@@ -258,8 +319,10 @@
   <p>I sketch, paint and fold origami &mdash; craft discipline that goes straight back
     into code. I'm learning <strong>guitar</strong> from zero, because the best engineers
     never stop being beginners.</p>
-  <p>And across three years of home workouts, no gym, I lost <strong>twenty kilograms</strong>.
-    The same stubbornness that recut a degree rebuilt a body.</p>
+  <p>I set out to sharpen the mind, and the body came back harder still.
+    Three years of training at home &mdash; no gym, no shortcuts &mdash; and
+    <strong>twenty kilograms</strong> gone. The obstinacy that recut a degree
+    works just as well on the man as it does on the pattern.</p>
   <div class="meta">SKETCHING &middot; PAINTING &middot; ORIGAMI &middot; GUITAR &middot; 20&nbsp;KG</div>
 </div>
 
@@ -1364,7 +1427,7 @@ function sconce(x, z, ry, lit) {
   const bulb = new THREE.Mesh(new THREE.SphereGeometry(.028, 8, 6),
     new THREE.MeshBasicMaterial({ color: C('#ffd9a0') }));
   bulb.position.set(0, .01, .18); g.add(bulb);
-  if (lit) {
+  if (lit && (!MOBILE || mobileSconceBudget-- > 0)) {
     const l = new THREE.PointLight(C('#ffc477'), .6, 4.8, 2);
     l.position.set(0, .02, .22); g.add(l);
   }
@@ -1390,8 +1453,12 @@ function pendant(x, z, drop) {
 
 /* Tight, warm spot for a single display. This is what gives each station its
    pool of light and lets everything between stations fall away to nothing. */
+let mobileSconceBudget = 2;
 function displaySpot(tx, ty, tz, opts) {
   opts = opts || {};
+  /* Fill and rim lights are a luxury: they cost the same per fragment as the
+     key light but only shape it. Phones get the keys only. */
+  if (MOBILE && opts.fill) return null;
   const l = new THREE.SpotLight(C(opts.color || '#ffc98a'),
     opts.i || 2.4, opts.dist || 9, opts.angle || .40, .72, 1.5);
   l.position.set(opts.x !== undefined ? opts.x : tx, opts.y || CEIL - .35, opts.z !== undefined ? opts.z : tz + .5);
@@ -1624,7 +1691,7 @@ function stationCommission(x, z) {
   pendant(x, z, 1.30);
   /* keyed from the front, filled softly from behind for a rim on the shoulder */
   displaySpot(x, 1.35, z, { i: 5.2, angle: .42, dist: 9, y: CEIL - .35, z: z + 1.5 });
-  displaySpot(x, 1.45, z, { i: 1.9, angle: .46, dist: 8, y: CEIL - .6, z: z - 1.6, color: '#ffb877', shadow: false });
+  displaySpot(x, 1.45, z, { i: 1.9, angle: .46, dist: 8, y: CEIL - .6, z: z - 1.6, color: '#ffb877', shadow: false, fill: true });
 }
 
 /* 5 — THE WAISTCOATS: structure under the jacket. Vxceed. */
@@ -1699,7 +1766,7 @@ function stationBlackTie(x, z) {
 
   pendant(x, z, 1.25);
   displaySpot(x, 1.35, z, { i: 5.4, angle: .40, dist: 9, y: CEIL - .35, z: z + 1.4, color: '#ffd4a4' });
-  displaySpot(x, 1.5, z, { i: 2.0, angle: .46, dist: 8, x: x - 1.4, y: CEIL - .7, z: z - 1.2, shadow: false });
+  displaySpot(x, 1.5, z, { i: 2.0, angle: .46, dist: 8, x: x - 1.4, y: CEIL - .7, z: z - 1.2, shadow: false, fill: true });
 }
 
 /* 7 — THE VITRINE: four movements. Four shipped projects. */
@@ -1955,7 +2022,7 @@ function stationOrderBook(x, z) {
   pendant(x, z - .1, 1.45);
   displaySpot(x, .9, z, { i: 3.4, angle: .48, dist: 7, y: CEIL - .5, z: z + 1.4 });
   /* wash the back wall so the certificate and ledgers are readable */
-  displaySpot(x, 1.75, z - .4, { i: 2.4, angle: .62, dist: 6, y: CEIL - .6, z: z + 1.0, shadow: false });
+  displaySpot(x, 1.75, z - .4, { i: 2.4, angle: .62, dist: 6, y: CEIL - .6, z: z + 1.0, shadow: false, fill: true });
 }
 
 /* Wall-hung framed pattern drawings, to break up long stretches of wall. */
@@ -1987,7 +2054,7 @@ function framedPattern(x, y, z, ry, w, h, kind) {
 /* Dust in the light beams. */
 let dust;
 function buildDust() {
-  const n = MOBILE ? 260 : 620, pos = new Float32Array(n * 3);
+  const n = MOBILE ? 150 : 620, pos = new Float32Array(n * 3);
   for (let i = 0; i < n; i++) {
     pos[i * 3] = (Math.random() - .5) * 8.4;
     pos[i * 3 + 1] = Math.random() * 3.4 + .2;
@@ -2059,7 +2126,7 @@ stationOrderBook(0, Z.desk);
     g.add(hg);
   });
   scene.add(g);
-  displaySpot(-HALL_W + .8, 1.5, 6.6, { i: 2.8, angle: .62, dist: 8, x: -HALL_W + 2.2, y: CEIL - .4, z: 6.6, shadow: false });
+  displaySpot(-HALL_W + .8, 1.5, 6.6, { i: 2.8, angle: .62, dist: 8, x: -HALL_W + 2.2, y: CEIL - .4, z: 6.6, shadow: false, fill: true });
 })();
 
 framedPattern(-HALL_W + .09, 1.95, 4.2, Math.PI / 2, .58, .76, 'coat');
@@ -2150,19 +2217,27 @@ function onScroll() {
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
-renderer.domElement.addEventListener('pointerdown', e => {
+/* Look-around. This has to live on the scroller, not on the canvas: the
+   scroller covers the whole viewport at a higher z-index, so pointer events
+   never reached the canvas underneath and the drag did nothing at all.
+   On touch only the horizontal axis is ours — vertical belongs to scrolling,
+   and `touch-action: pan-y` lets the browser keep it. */
+const dragSurface = document.getElementById('scroller');
+dragSurface.addEventListener('pointerdown', e => {
   dragging = true; lastX = e.clientX; lastY = e.clientY;
-  renderer.domElement.setPointerCapture(e.pointerId);
-});
-renderer.domElement.addEventListener('pointermove', e => {
+  if (e.pointerType === 'mouse') dragSurface.setPointerCapture(e.pointerId);
+}, { passive: true });
+dragSurface.addEventListener('pointermove', e => {
   if (!dragging) return;
   dragX += (e.clientX - lastX) * 0.0016;
-  dragY += (e.clientY - lastY) * 0.0011;
+  if (e.pointerType === 'mouse') dragY += (e.clientY - lastY) * 0.0011;
   dragX = Math.max(-0.5, Math.min(0.5, dragX));
   dragY = Math.max(-0.22, Math.min(0.22, dragY));
   lastX = e.clientX; lastY = e.clientY;
-});
-addEventListener('pointerup', () => { dragging = false; });
+}, { passive: true });
+for (const ev of ['pointerup', 'pointercancel']) {
+  addEventListener(ev, () => { dragging = false; }, { passive: true });
+}
 
 /* Every station is composed for how WIDE it is — a 3.6m wall of cloth, a 2.3m
    vitrine. A vertical FOV held constant would crop all of that away on a
@@ -2170,16 +2245,39 @@ addEventListener('pointerup', () => { dragging = false; });
    horizontal field stays roughly what the composition assumes. */
 const BASE_FOV = 42, BASE_ASPECT = 16 / 9;
 const H_FOV = 2 * Math.atan(Math.tan(BASE_FOV / 2 * Math.PI / 180) * BASE_ASPECT);
+/* Declared before fitLens() runs — a `let` assigned above its own declaration
+   is a temporal-dead-zone error, and it would abort the rest of this script
+   before the render loop ever starts. */
+let portraitLift = 0;   // how far to aim below target so the subject rides high
 function fitLens() {
   const a = innerWidth / innerHeight;
   camera.aspect = a;
   camera.fov = a >= BASE_ASPECT ? BASE_FOV
     : Math.min(80, 2 * Math.atan(Math.tan(H_FOV / 2) / a) * 180 / Math.PI);
+  /* only portrait needs the lift; sideways the panel is a column, not a band */
+  portraitLift = (typeof MOBILE !== 'undefined' && MOBILE && a < 1) ? 0.34 : 0;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
 }
 fitLens();
-addEventListener('resize', fitLens);
+
+/* Mobile browsers fire resize continuously while the URL bar slides in and out,
+   and each one reallocates the drawing buffer. Debounce, and ignore the small
+   height-only changes that the URL bar produces. */
+let lastW = innerWidth, lastH = innerHeight, resizeTimer = 0;
+addEventListener('resize', () => {
+  const widthChanged = innerWidth !== lastW;
+  if (!widthChanged && Math.abs(innerHeight - lastH) < 130) return;
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    lastW = innerWidth; lastH = innerHeight;
+    fitLens();
+    onScroll();
+  }, 140);
+}, { passive: true });
+addEventListener('orientationchange', () => {
+  setTimeout(() => { lastW = innerWidth; lastH = innerHeight; fitLens(); onScroll(); }, 250);
+});
 
 const camPos = new THREE.Vector3(), camTgt = new THREE.Vector3(), lookAt = new THREE.Vector3();
 let last = performance.now();
@@ -2208,6 +2306,9 @@ function frame(now) {
   lookAt.copy(camTgt);
   lookAt.x += curDragX * 3.4;
   lookAt.y -= curDragY * 2.6;
+  /* On a phone the copy panel owns the lower half of the screen. Aiming a
+     little lower lifts the garment above it instead of behind it. */
+  if (MOBILE) lookAt.y -= portraitLift;
   if (!freeCam) camera.lookAt(lookAt);
 
   if (dust) {
